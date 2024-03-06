@@ -21,7 +21,6 @@ import { join } from 'path';
             rootPath: join(__dirname, '..', 'swagger-static'),
             serveRoot: process.env.NODE_ENV === "development" ? '/' : '/swagger',
         }),
-        ConfigModule.forRoot(),
         MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
         MongooseModule.forFeature([{name: Post.name, schema: PostSchema}]),
         MongooseModule.forFeature([{name: Blog.name, schema: BlogSchema}]),
@@ -33,7 +32,9 @@ import { join } from 'path';
     ],
 
     controllers: [AppController],
-    providers: [ AppService ],
+
+
+    providers: [AppService],
 })
 export class AppModule {
 }

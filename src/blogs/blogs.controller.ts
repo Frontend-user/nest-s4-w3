@@ -68,7 +68,7 @@ export class BlogsController {
         }
         const result = await this.postsQueryRepository.getPostsByBlogId(postsQueries, id);
 
-        const blog = await this.blogsService.getBlogById(id);
+        const blog = await this.blogsQueryRepository.getBlogById(id);
         if (!blog) {
             throw new HttpException('Failed getPostByBlogId', HttpStatus.NOT_FOUND)
         }
@@ -92,7 +92,7 @@ export class BlogsController {
         @Body() body: PostInputCreateModel,
         @Param('id') id: string
     ): Promise<WithId<PostViewModel> | undefined> {
-        const blog = await this.blogsService.getBlogById(id);
+        const blog = await this.blogsQueryRepository.getBlogById(id);
         if (blog) {
             body.blogId = String(blog._id);
             const post: WithId<PostViewModel> | false = await this.postsService.createPost(

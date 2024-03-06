@@ -3,21 +3,30 @@ import {
     Controller,
     Post,
     Response,
-    UseGuards,HttpCode, HttpException
+    UseGuards, HttpCode, HttpException, Get
 } from "@nestjs/common";
 import {LocalAuthGuard} from "../guards/local-auth.guard";
 import {AuthService} from "../application/auth.service";
 import {
     AccessRefreshTokens, EmailValidClass,LoginOrEmailPasswordModel, RegistrationDataClass
 } from "../types/auth.types";
+import {CommandBus} from "@nestjs/cqrs";
+import { RegistrationUseCaseCommand} from "../application/use-cases/registration-use-case";
 
 
 @Controller('/auth')
 export class AuthController {
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private commandBus: CommandBus,
     ) {
     }
+    // @Get('/try')
+    // getHello() {
+    //     return this.commandBus.execute(
+    //         new RegistrationUseCaseCommand({'a':'b'}),
+    //     );
+    // }
 
     @UseGuards(LocalAuthGuard)
     @HttpCode(200)
@@ -41,7 +50,9 @@ export class AuthController {
     @HttpCode(204)
     @Post('/registration')
     async registration(@Body() body: RegistrationDataClass) {
-        const response = await this.authService.registration(body)
+        const response = await this.commandBus.execute(
+            new RegistrationUseCaseCommand(body),
+        );
         if (!response) {
             throw new HttpException('Falied registration', 400)
         }
