@@ -222,21 +222,21 @@ describe('BLogs',()=>{
         expect(response).toEqual('s');
     });
     it(`CREATE BLOG`, async () => {
-        let response = await testManager.createBlog('bbbb');
+        let response = await testManager.createWrongBodyBlog();
         expect(response).toEqual('s');
     });
-    it(`CREATE BLOG`, async () => {
-        let response = await testManager.createBlog('cccc');
-        expect(response).toEqual('s');
-    });
-    it(`CREATE BLOG`, async () => {
-        let response = await testManager.createBlog('zzzz');
-        expect(response).toEqual('s');
-    });
+    // it(`CREATE BLOG`, async () => {
+    //     let response = await testManager.createBlog('cccc');
+    //     expect(response).toEqual('s');
+    // });
+    // it(`CREATE BLOG`, async () => {
+    //     let response = await testManager.createBlog('zzzz');
+    //     expect(response).toEqual('s');
+    // });
 
 
     it(`GET BLOGssss`, async () => {
-        const allBlogs: any = await testManager.getBlogs('c', 'name', 'desc',2,2);
+        const allBlogs: any = await testManager.getBlogs('', 'name', 'desc',2,2);
         // let s :any[]= [];
         // allBlogs.items.forEach((i:any) => {
         //   s.push(i.name);

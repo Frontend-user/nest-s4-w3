@@ -5,8 +5,10 @@ import {correctRegistrationData} from "./registration.data";
 export const correctBlogData = {
     name: 'name',
     description: 'description',
-    websiteUrl: 'https://TXOxcSX82Olmsdf8sXEHAWm.ZFTe4',
+    websiteUrl: 'https://TXOOl.ZFTe4',
 };
+
+export const wrongBodyBlogData = {"nam":"somename","websiteUrl":"invalid-url","description":"description"}
 
 export const correctUser1 = {
     login: 'login',
@@ -66,7 +68,8 @@ export class TestManager {
     ) {
         const response = await request(this.app.getHttpServer()).get(
             // `/blogs?searchNameTerm=${searchNameTerm}`,
-            `/blogs?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+            // `/blogs?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+            `/blogs`,
         );
         return JSON.parse(response.text);
     }
@@ -158,6 +161,7 @@ export class TestManager {
         p['blogId'] = blogId;
         this.blog_1 = await request(this.app.getHttpServer())
             .put(`/posts/${postId}`)
+          .set('Authorization', `${SUPERADMIN_TOKEN}`)
             .send(p)
             .expect(203);
         // return this.blog_1.text;
@@ -166,7 +170,16 @@ export class TestManager {
     async createBlog(name: string = 'string') {
         this.blog_1 = await request(this.httpServer)
             .post('/blogs')
+          .set('Authorization', `${SUPERADMIN_TOKEN}`)
             .send({...correctBlogData, name});
+
+        return JSON.parse(this.blog_1.text);
+    }
+    async createWrongBodyBlog() {
+        this.blog_1 = await request(this.httpServer)
+          .post('/blogs')
+          .set('Authorization', `${SUPERADMIN_TOKEN}`)
+          .send(wrongBodyBlogData);
 
         return JSON.parse(this.blog_1.text);
     }
