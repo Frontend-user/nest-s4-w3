@@ -9,6 +9,24 @@ export type NewLikeStatusType = {
   userId: string;
 };
 
+export class PostInputCreateModelWithoutBlogId {
+  @Transform(({ value }) => value?.trim())
+  @Length(2, 30)
+  @IsString()
+  title: string;
+
+  @Transform(({ value }) => value?.trim())
+  @Length(2, 100)
+  @IsString()
+  shortDescription: string;
+
+  @Transform(({ value }) => value?.trim())
+  @Length(2, 1000)
+  @IsString()
+  content: string;
+
+  }
+
 export class PostInputCreateModel {
   @Transform(({ value }) => value?.trim())
   @Length(2, 30)

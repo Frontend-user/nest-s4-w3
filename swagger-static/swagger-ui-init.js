@@ -289,7 +289,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PostInputCreateModel"
+                  "$ref": "#/components/schemas/PostInputCreateModelWithoutBlogId"
                 }
               }
             }
@@ -421,6 +421,10 @@ window.onload = function() {
           "properties": {}
         },
         "BlogInputCreateModel": {
+          "type": "object",
+          "properties": {}
+        },
+        "PostInputCreateModelWithoutBlogId": {
           "type": "object",
           "properties": {}
         },
