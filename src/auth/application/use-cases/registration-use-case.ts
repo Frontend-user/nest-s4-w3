@@ -13,9 +13,7 @@ export class RegistrationUseCaseCommand {
 }
 
 @CommandHandler(RegistrationUseCaseCommand)
-export class RegistrationUseCase
-  implements ICommandHandler<RegistrationUseCaseCommand>
-{
+export class RegistrationUseCase implements ICommandHandler<RegistrationUseCaseCommand> {
   constructor(
     private usersQueryRepository: UsersQueryRepository,
     private nodemailerService: NodemailerService,
@@ -24,33 +22,18 @@ export class RegistrationUseCase
 
   async execute(command: RegistrationUseCaseCommand): Promise<boolean> {
     const userInputData = command.userInputData;
-    const isExistEmail = await this.usersQueryRepository.getUserByEmailOrLogin(
-      userInputData.email,
-    );
-    const isExistLogin = await this.usersQueryRepository.getUserByEmailOrLogin(
-      userInputData.login,
-    );
+    const isExistEmail = await this.usersQueryRepository.getUserByEmailOrLogin(userInputData.email);
+    const isExistLogin = await this.usersQueryRepository.getUserByEmailOrLogin(userInputData.login);
     if (isExistLogin) {
-      throw new HttpException(
-        { field: "login", message: "login is exist" },
-        400,
-      );
+      throw new HttpException({ field: "login", message: "login is exist" }, 400);
     }
     if (isExistEmail) {
-      throw new HttpException(
-        { field: "email", message: "email is exist" },
-        400,
-      );
+      throw new HttpException({ field: "email", message: "email is exist" }, 400);
     }
     // const confirmationCode = '1234'
     const confirmationCode = uuidv4();
     const confirmationDate = add(new Date(), { hours: 1, minutes: 3 });
-    const userEmailEntity: User = await User.createUserEntity(
-      userInputData,
-      false,
-      confirmationCode,
-      confirmationDate,
-    );
+    const userEmailEntity: User = await User.createUserEntity(userInputData, false, confirmationCode, confirmationDate);
 
     const mailSendResponse = await this.nodemailerService.send(
       userEmailEntity.emailConfirmation.confirmationCode,

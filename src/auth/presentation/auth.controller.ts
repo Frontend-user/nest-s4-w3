@@ -12,6 +12,9 @@ import {
 } from "../types/auth.types";
 import {CommandBus} from "@nestjs/cqrs";
 import { RegistrationUseCaseCommand} from "../application/use-cases/registration-use-case";
+import {
+    RegistrationEmailResendingUseCaseCommand
+} from "../application/use-cases/registration-email-resending-use-case";
 
 
 @Controller('/auth')
@@ -62,7 +65,7 @@ export class AuthController {
     @Post('/registration-email-resending')
     async registrationEmailResending(@Body() body: EmailValidClass) {
 
-        const response = await this.authService.registrationEmailResending(body.email)
+        const response = await this.commandBus.execute( new RegistrationEmailResendingUseCaseCommand(body.email))
         if (!response) {
             throw new HttpException({message: 'wrong email', field: "email"}, 400)
         }
