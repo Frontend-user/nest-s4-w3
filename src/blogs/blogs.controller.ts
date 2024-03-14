@@ -5,30 +5,24 @@ import {
     Get,
     HttpCode,
     HttpException, HttpStatus, Inject,
-    NotFoundException,
     Param,
     Post,
     Put,
-    Query,
-    Res
-} from '@nestjs/common';
+    Query, UseGuards,
+} from "@nestjs/common";
 import {BlogsService} from './application/blogs.service';
 import {BlogInputCreateModel, BlogViewModel, WithId} from './types/blogs.types';
 import {BlogsMongoDataMapper} from './domain/blogs.mongo.dm';
 import {BlogDocumentType} from './domain/blogs-schema';
 import {PostInputCreateModel, PostViewModel} from '../posts/types/post.types';
-import {PostDocumentType} from '../posts/domain/posts-schema';
 import {PostsService} from '../posts/application/posts.service';
 import {BlogsQueryRepository} from './repositories/blogs.query-repository';
-import {QueryUtilsClass} from '../_common/query.utils';
 import {PostsQueryRepository} from '../posts/repositories/posts.query-repository';
 import {PostsMongoDataMapper} from '../posts/domain/posts.mongo.dm';
-import {HTTP_STATUSES} from '../_common/constants';
-import {query} from 'express';
-import {NotFoundError} from "rxjs";
-import {BlogsQueryTransformPipe, BlogsQueryTransformTypes, BlogsQueryTypes} from "./pipes/blogs-query-transform-pipe";
+import {BlogsQueryTransformPipe, BlogsQueryTransformTypes} from "./pipes/blogs-query-transform-pipe";
 import {PostsQueryTransformPipe, PostsQueryTransformTypes} from "../posts/pipes/posts-query-transform-pipe";
 import {CommonResponseFabric} from "../_common/common-response-fabric";
+import { LocalAuthGuard } from "../auth/guards/local-auth.guard";
 
 @Controller('/blogs')
 export class BlogsController {
@@ -76,6 +70,7 @@ export class BlogsController {
         return this.commonResponseFabric.createAndGetResponse(postsQueries, posts, totalCount, PostsMongoDataMapper)
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(201)
     @Post()
     async createBlog(@Body() body: BlogInputCreateModel): Promise<WithId<BlogViewModel>> {
@@ -86,6 +81,7 @@ export class BlogsController {
         return BlogsMongoDataMapper.toView(blog)
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(201)
     @Post('/:id/posts')
     async createPostByBlogId(
@@ -109,6 +105,7 @@ export class BlogsController {
 
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(204)
     @Put('/:id')
     async updateBlog(@Body() body: BlogInputCreateModel, @Param('id') id: string) {
@@ -118,6 +115,7 @@ export class BlogsController {
         }
     }
 
+    @UseGuards(LocalAuthGuard)
     @Delete('/:id')
     @HttpCode(204)
     async deleteBlog(@Param('id') id: string) {

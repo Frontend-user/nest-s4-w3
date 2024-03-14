@@ -10,8 +10,8 @@ import {
     Post,
     Put,
     Query,
-    Res
-} from '@nestjs/common';
+    Res, UseGuards,
+} from "@nestjs/common";
 import {PostsService} from './application/posts.service';
 import {PostsRepository} from './repositories/posts.repository';
 import {PostsQueryRepository} from './repositories/posts.query-repository';
@@ -25,6 +25,7 @@ import {BlogsQueryTransformPipe, BlogsQueryTransformTypes} from "../blogs/pipes/
 import {PostsQueryTransformPipe, PostsQueryTransformTypes} from "./pipes/posts-query-transform-pipe";
 import {CommonResponseFabric} from "../_common/common-response-fabric";
 import {UsersMongoDataMapper} from "../users/domain/users.mongo.dm";
+import { LocalAuthGuard } from "../auth/guards/local-auth.guard";
 
 @Controller('/posts')
 export class PostsController {
@@ -65,6 +66,7 @@ export class PostsController {
         }
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(201)
     @Post()
     async createPost(@Body() body: PostInputCreateModel) {
@@ -82,6 +84,7 @@ export class PostsController {
         }
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Put('/:id')
     async updatePost(@Body() body: PostInputCreateModel, @Param('id') id: string) {
@@ -96,6 +99,7 @@ export class PostsController {
         }
     }
 
+    @UseGuards(LocalAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete('/:id')
     async deletePost(@Param('id') id: string) {
