@@ -284,6 +284,16 @@ window.onload = function() {
               }
             }
           ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInputCreateModel"
+                }
+              }
+            }
+          },
           "responses": {
             "201": {
               "description": ""
@@ -304,6 +314,16 @@ window.onload = function() {
         "post": {
           "operationId": "PostsController_createPost",
           "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInputCreateModel"
+                }
+              }
+            }
+          },
           "responses": {
             "201": {
               "description": ""
@@ -333,6 +353,16 @@ window.onload = function() {
               }
             }
           ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInputCreateModel"
+                }
+              }
+            }
+          },
           "responses": {
             "204": {
               "description": ""
@@ -391,6 +421,10 @@ window.onload = function() {
           "properties": {}
         },
         "BlogInputCreateModel": {
+          "type": "object",
+          "properties": {}
+        },
+        "PostInputCreateModel": {
           "type": "object",
           "properties": {}
         }

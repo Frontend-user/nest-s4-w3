@@ -218,7 +218,7 @@ describe('BLogs',()=>{
         await testManager.deleteAll();
     });
     it(`CREATE BLOG`, async () => {
-        let response = await testManager.createBlog('aaaa');
+        let response = await testManager.createBlog('     ');
         expect(response).toEqual('s');
     });
     it(`CREATE BLOG`, async () => {
