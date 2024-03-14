@@ -22,7 +22,7 @@ import {PostsMongoDataMapper} from '../posts/domain/posts.mongo.dm';
 import {BlogsQueryTransformPipe, BlogsQueryTransformTypes} from "./pipes/blogs-query-transform-pipe";
 import {PostsQueryTransformPipe, PostsQueryTransformTypes} from "../posts/pipes/posts-query-transform-pipe";
 import {CommonResponseFabric} from "../_common/common-response-fabric";
-import { LocalAuthGuard } from "../auth/guards/local-auth.guard";
+import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
 
 @Controller('/blogs')
 export class BlogsController {
@@ -70,7 +70,7 @@ export class BlogsController {
         return this.commonResponseFabric.createAndGetResponse(postsQueries, posts, totalCount, PostsMongoDataMapper)
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(201)
     @Post()
     async createBlog(@Body() body: BlogInputCreateModel): Promise<WithId<BlogViewModel>> {
@@ -81,7 +81,7 @@ export class BlogsController {
         return BlogsMongoDataMapper.toView(blog)
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(201)
     @Post('/:id/posts')
     async createPostByBlogId(
@@ -105,7 +105,7 @@ export class BlogsController {
 
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(204)
     @Put('/:id')
     async updateBlog(@Body() body: BlogInputCreateModel, @Param('id') id: string) {
@@ -115,7 +115,7 @@ export class BlogsController {
         }
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @Delete('/:id')
     @HttpCode(204)
     async deleteBlog(@Param('id') id: string) {

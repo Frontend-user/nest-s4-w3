@@ -19,13 +19,9 @@ import {PostDocumentType} from './domain/posts-schema';
 import {PostInputCreateModel, PostViewModel} from './types/post.types';
 import {PostsMongoDataMapper} from './domain/posts.mongo.dm';
 import {BlogsQueryRepository} from '../blogs/repositories/blogs.query-repository';
-import {HTTP_STATUSES} from '../_common/constants';
-import {QueryUtilsClass} from '../_common/query.utils';
-import {BlogsQueryTransformPipe, BlogsQueryTransformTypes} from "../blogs/pipes/blogs-query-transform-pipe";
 import {PostsQueryTransformPipe, PostsQueryTransformTypes} from "./pipes/posts-query-transform-pipe";
 import {CommonResponseFabric} from "../_common/common-response-fabric";
-import {UsersMongoDataMapper} from "../users/domain/users.mongo.dm";
-import { LocalAuthGuard } from "../auth/guards/local-auth.guard";
+import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
 
 @Controller('/posts')
 export class PostsController {
@@ -66,7 +62,7 @@ export class PostsController {
         }
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(201)
     @Post()
     async createPost(@Body() body: PostInputCreateModel) {
@@ -84,7 +80,7 @@ export class PostsController {
         }
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Put('/:id')
     async updatePost(@Body() body: PostInputCreateModel, @Param('id') id: string) {
@@ -99,7 +95,7 @@ export class PostsController {
         }
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(BasicAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete('/:id')
     async deletePost(@Param('id') id: string) {

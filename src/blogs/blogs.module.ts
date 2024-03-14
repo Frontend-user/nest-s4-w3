@@ -7,6 +7,8 @@ import { Blog, BlogSchema } from './domain/blogs-schema';
 import { BlogsQueryRepository } from './repositories/blogs.query-repository';
 import {PostsModule} from "../posts/posts.module";
 import {CommonResponseFabric} from "../_common/common-response-fabric";
+import { BasicStrategy } from "../auth/strategies/basic.strategy";
+import { LocalStrategy } from "../auth/strategies/local.strategy";
 
 @Module({
   imports: [
