@@ -27,6 +27,7 @@ import { CommonResponseFabric } from "../_common/common-response-fabric";
 import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
 import { Types } from "mongoose";
 import { BearerAuthGuard } from "../auth/guards/bearer-auth.guard";
+import { Request } from "express";
 
 @Controller("/posts")
 export class PostsController {
@@ -50,9 +51,9 @@ export class PostsController {
   }
 
   @Get("/:id")
-  async getPostById(@Param() id: string): Promise<PostViewModel | any> {
+  async getPostById(@Param() id: string,@Req() req: Request): Promise<PostViewModel | any> {
     try {
-      const post: PostDocumentType | null = await this.postsQueryRepository.getPostById(id);
+      const post: PostDocumentType | null = await this.postsQueryRepository.getPostById(id,req.headers.authorization);
       if (post) {
         return PostsMongoDataMapper.toView(post);
       }

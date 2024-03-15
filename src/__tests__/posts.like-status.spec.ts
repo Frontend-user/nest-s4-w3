@@ -81,6 +81,7 @@ describe("Blogs", () => {
       expect(postId_One).toEqual("Some POst Id");
     });
 
+
     // it(`LIKE POST BY REG USER`, async () => {
     //   const postResp = await testManager.craetePostByBlogId(blogId_One);
     //   postId_One = postResp.id
@@ -98,6 +99,10 @@ describe("Blogs", () => {
       expect(JSON.parse(postData.text)).toEqual('some')
     });
 
+    it('Get post by id', async ()=>{
+      const postResp = await testManager.getPost(postId_One,accessToken)
+      expect(postResp).toEqual('post some')
+    })
 
   });
 });
