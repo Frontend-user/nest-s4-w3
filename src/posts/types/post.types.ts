@@ -2,6 +2,10 @@ import { Transform } from "class-transformer";
 import { IsString, Length } from "class-validator";
 
 export type LikeStatus = "None" | "Like" | "Dislike";
+export type usersIdsPostsLikeStatuses = { userId: string; likeStatus: string; addedAt: string; login: string };
+export type usersIdsLikeStatuses = { userId: string; likeStatus: string };
+
+export type newestLikes = { addedAt: string; userId: string; login: string };
 
 export type NewLikeStatusType = {
   addedAt: Date;
@@ -24,8 +28,7 @@ export class PostInputCreateModelWithoutBlogId {
   @Length(2, 1000)
   @IsString()
   content: string;
-
-  }
+}
 
 export class PostInputCreateModel {
   @Transform(({ value }) => value?.trim())
@@ -46,8 +49,7 @@ export class PostInputCreateModel {
   @Transform(({ value }) => value?.trim())
   @IsString()
   blogId: string;
-
-};
+}
 
 export type PostViewModel = {
   title: string;
@@ -68,4 +70,5 @@ export type ExtendedLikesInfoType = {
   dislikesCount: number;
   myStatus: LikeStatus;
   newestLikes: NewLikeStatusType[];
+  usersLikeStatuses?:any[]
 };

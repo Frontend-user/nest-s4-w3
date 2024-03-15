@@ -10,9 +10,9 @@ export class PostsQueryRepository {
     constructor(@InjectModel(Post.name) private postModel: Model<Post>) {
     }
 
-    async getPostById(id: string): Promise<PostDocumentType | null> {
+    async getPostById(id: any): Promise<PostDocumentType | null> {
         try {
-            let a: any = await this.postModel.findOne({_id: new Types.ObjectId(id)}).lean();
+            const a: any = await this.postModel.findOne({_id: new Types.ObjectId(id)}).lean();
             return a;
         } catch (e) {
             return null;

@@ -32,11 +32,19 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any): Promise<AccessRefreshTokens> {
-    const payload = { userId: user.userId };
+  async login(user: any): Promise<AccessRefreshTokens | any> {
+    const userId:any = (await this.usersQueryRepository.getUserByEmailOrLogin(user.loginOrEmail))?._id
+    if(!userId){
+      return  {
+        accessToken:false,
+        refreshToken:false
+      }
+    }
+    const payload = { userId};
+    console.log(payload,'payload login');
     const payloadForRefreshToken = { userId: user.userId };
-    const accessToken = await this.myJwtService.createJWT(payload, "10s");
-    const refreshToken = await this.myJwtService.createRefreshToken(payloadForRefreshToken, "10s");
+    const accessToken = await this.myJwtService.createJWT(payload, "10m");
+    const refreshToken = await this.myJwtService.createRefreshToken(payloadForRefreshToken, "10m");
     return {
       accessToken,
       refreshToken,

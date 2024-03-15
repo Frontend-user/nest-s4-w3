@@ -20,6 +20,8 @@ export class Post {
 
   @Prop({ type: SchemaTypes.Mixed, required: true }) extendedLikesInfo: ExtendedLikesInfoType;
 
+
+
   static creatPost(body: PostInputCreateModel, blogName: string): Post {
     return {
       title: body.title,
@@ -32,6 +34,7 @@ export class Post {
         dislikesCount: 0,
         myStatus: 'None',
         newestLikes: [],
+        usersLikeStatuses:[],
       },
       createdAt: new Date(),
     };

@@ -5,6 +5,7 @@ import { PostsRepository } from '../repositories/posts.repository';
 import { PostsQueryRepository } from '../repositories/posts.query-repository';
 import { PostsMongoDataMapper } from '../domain/posts.mongo.dm';
 import { WithId } from '../../blogs/types/blogs.types';
+import { Types } from "mongoose";
 
 @Injectable()
 export class PostsService {
@@ -30,7 +31,9 @@ export class PostsService {
   async updatePost(id: string, post: PostInputCreateModel): Promise<boolean> {
     return await this.postsRepository.updatePost(id, post);
   }
-
+  async updatePostLikeStatus(id: Types.ObjectId, likeStatus: string,userId:string): Promise<boolean> {
+    return await this.postsRepository.updatePostLikeStatus(id, likeStatus,userId)
+  }
   async deleteAllData() {
     return await this.postsRepository.deleteAllData();
   }

@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 import {Injectable} from '@nestjs/common';
 import process from "process";
+import { Types } from "mongoose";
+import { UsersQueryRepository } from "../users/repositories/users.query-repository";
 
 @Injectable()
 export class MyJwtService {
@@ -48,23 +50,23 @@ export class MyJwtService {
         }
     }
 
-    // async checkToken(token: string) {
-    //   try {
-    //     const result: any = await jwt.verify(token, process.env.JWT_SECRET);
-    //     const isFindUser = await this.usersQueryRepository.getUserById(
-    //       new Types.ObjectId(result.userId),
-    //     );
-    //     return isFindUser ? result.userId : false;
-    //   } catch (error) {
-    //     return;
-    //   }
-    // }
+    async checkToken(token: string) {
+      try {
+        const result: any = await jwt.verify(token, process.env.JWT_SECRET);
+        // const isFindUser = await this.usersQueryRepository.getUserById(
+        //   new Types.ObjectId(result.userId),
+        // );
+        return result ? result.userId : false;
+      } catch (error) {
+        return;
+      }
+    }
 
     async generateSalt(saltNumber: number) {
         return await bcrypt.genSalt(saltNumber);
     }
 
-    async generateHash(password: String, salt: string) {
+    async generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt);
         if (hash) {
             return hash;

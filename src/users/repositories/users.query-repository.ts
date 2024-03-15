@@ -1,16 +1,15 @@
-import {Model} from 'mongoose';
+import { Model, Types } from "mongoose";
 import {InjectModel} from '@nestjs/mongoose';
 import {Injectable} from '@nestjs/common';
 import {createUserEntity, User, UserDocumentType} from '../domain/users-schema';
 import {UsersQueryTransformTypes} from "../pipes/users-query-transform-pipe";
-import {UserQueryResult} from "../../_common/object-result";
 
 @Injectable()
 export class UsersQueryRepository {
     constructor(@InjectModel('User') private userModel: Model<User> & createUserEntity) {
     }
 
-    async getUserByEmailOrLogin(loginOrEmail: String): Promise<UserDocumentType | null> {
+    async getUserByEmailOrLogin(loginOrEmail: string): Promise<UserDocumentType | null> {
         const response: UserDocumentType | null = await this.userModel.findOne({$or: [{'accountData.login': loginOrEmail}, {'accountData.email': loginOrEmail}]}).lean()
         return response ? response : null
     }
@@ -31,5 +30,10 @@ export class UsersQueryRepository {
         } else {
             return {totalCount: 0, users: []};
         }
+    }
+
+    async getUserById(userId: string): Promise<User | false> {
+        const getUser = await this.userModel.findOne({_id: new Types.ObjectId(userId)}).lean()
+        return getUser ? getUser : false
     }
 }

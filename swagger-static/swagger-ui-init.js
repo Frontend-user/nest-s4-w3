@@ -387,6 +387,36 @@ window.onload = function() {
             }
           }
         }
+      },
+      "/posts/{postId}/like-status": {
+        "put": {
+          "operationId": "PostsController_updatePostLikeStatus",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
       }
     },
     "info": {

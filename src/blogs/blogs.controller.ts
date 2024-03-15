@@ -23,6 +23,7 @@ import { BlogsQueryTransformPipe, BlogsQueryTransformTypes } from "./pipes/blogs
 import { PostsQueryTransformPipe, PostsQueryTransformTypes } from "../posts/pipes/posts-query-transform-pipe";
 import { CommonResponseFabric } from "../_common/common-response-fabric";
 import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
+import { BearerAuthGuard } from "../auth/guards/bearer-auth.guard";
 
 @Controller("/blogs")
 export class BlogsController {
