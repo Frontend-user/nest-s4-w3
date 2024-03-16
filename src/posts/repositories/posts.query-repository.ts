@@ -69,15 +69,22 @@ export class PostsQueryRepository {
     // }
   }
 
-  async getPosts(postsQuery: PostsQueryTransformTypes): Promise<any> {
+  async getPosts(postsQuery: PostsQueryTransformTypes,accessToken?:string): Promise<any> {
     const query = this.postModel.find();
     const totalCount = this.postModel.find();
 
     const posts = await query.sort(postsQuery.sortParams).skip(postsQuery.skip).limit(postsQuery.limit).lean();
+
+    const fixArrayIds: any[] = [];
+    for (let i = 0; i < posts.length; i++) {
+      const post: any = await this.getPostById(String(posts[i]._id), accessToken);
+      fixArrayIds.push(post);
+    }
+
     if (posts.length > 0) {
       const allPosts = await totalCount.countDocuments();
 
-      return { totalCount: allPosts, posts: posts };
+      return { totalCount: allPosts, posts: fixArrayIds };
     } else return [];
   }
 

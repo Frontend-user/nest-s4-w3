@@ -151,8 +151,11 @@ export class TestManager {
     return JSON.parse(getOnePost.text);
   }
 
-  async getPosts() {
-    const getOnePost = await request(this.app.getHttpServer()).get(`/posts`);
+  async getPosts(accessToken?:string) {
+    const getOnePost = await request(this.app.getHttpServer())
+      .get(`/posts`)
+      .set("authorization", "Bearer " + `${accessToken}`)
+
     expect(JSON.parse(getOnePost.text)).toEqual([]);
   }
 

@@ -13,6 +13,25 @@ export const correctLoginData_SECOND_USER = {
     password:'123456',
 }
 
+export const USER_3 = {
+    login:'reg3',
+    email:'webstormSEC@mail.ru',
+    password:'123456',
+}
+
+export const USER_4 = {
+    login:'reg4',
+    email:'webstormSEC@mail.ru',
+    password:'123456',
+}
+export const correctLoginData_USER_3 = {
+    loginOrEmail:'reg3',
+    password:'123456',
+}
+export const correctLoginData_USER_4 = {
+    loginOrEmail:'reg4',
+    password:'123456',
+}
 export const correctLoginData = {
     loginOrEmail:'reg',
     password:'123456',

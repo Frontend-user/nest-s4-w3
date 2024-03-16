@@ -40,8 +40,8 @@ export class PostsController {
   ) {}
 
   @Get()
-  async getPosts(@Query(PostsQueryTransformPipe) postsQueries: PostsQueryTransformTypes) {
-    const result = await this.postsQueryRepository.getPosts(postsQueries);
+  async getPosts(@Query(PostsQueryTransformPipe) postsQueries: PostsQueryTransformTypes, @Req() req: Request) {
+    const result = await this.postsQueryRepository.getPosts(postsQueries, req.headers.authorization);
 
     if (!result) {
       throw new HttpException("Falied getPosts", HttpStatus.NOT_FOUND);
@@ -51,9 +51,9 @@ export class PostsController {
   }
 
   @Get("/:id")
-  async getPostById(@Param() id: string,@Req() req: Request): Promise<PostViewModel | any> {
+  async getPostById(@Param() id: string, @Req() req: Request): Promise<PostViewModel | any> {
     try {
-      const post: PostDocumentType | null = await this.postsQueryRepository.getPostById(id,req.headers.authorization);
+      const post: PostDocumentType | null = await this.postsQueryRepository.getPostById(id, req.headers.authorization);
       if (post) {
         return PostsMongoDataMapper.toView(post);
       }
@@ -100,7 +100,7 @@ export class PostsController {
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put("/:postId/like-status")
-  async updatePostLikeStatus(@Body('likeStatus') likeStatus: LikeStatus, @Param("postId") postId: string, @Req() req: any) {
+  async updatePostLikeStatus(@Body("likeStatus") likeStatus: LikeStatus, @Param("postId") postId: string, @Req() req: any) {
     const userId = req.headers.userId;
     try {
       const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
