@@ -14,11 +14,11 @@ export class PostsQueryRepository {
   ) {}
 
   async getPostById(postId: string, accessToken?: any): Promise<PostDocumentType | null> {
-    const post: PostDocumentType | null = await this.postModel.findOne({ _id: new Types.ObjectId(postId)}).lean();
+    const post: PostDocumentType | null = await this.postModel.findOne({ _id: new Types.ObjectId(postId) }).lean();
     if (!post) {
       return null;
     }
-    let accessUserId;
+    let accessUserId: string = "";
     if (accessToken) {
       accessUserId = await this.myJwtService.checkToken(accessToken.split(" ")[1]);
     }
@@ -81,7 +81,7 @@ export class PostsQueryRepository {
     } else return [];
   }
 
-  async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id): Promise<any> {
+  async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id: string | Types.ObjectId): Promise<any> {
     try {
       await this.postModel.find({ blogId: id }).lean();
     } catch (e) {

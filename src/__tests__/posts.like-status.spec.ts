@@ -98,7 +98,14 @@ describe("Blogs", () => {
       // console.log('LIKE COMMENT', 'comment', comment)
       expect(JSON.parse(postData.text)).toEqual('some')
     });
-
+    it('LIKE POST', async () => {
+      const postData = await testManager.likeEntity(
+        ENTITIES.POSTS, accessToken,
+        postId_One, LIKE_STATUSES.LIKE)
+      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+      // console.log('LIKE COMMENT', 'comment', comment)
+      expect(JSON.parse(postData.text)).toEqual('some')
+    });
     it('Get post by id', async ()=>{
       const postResp = await testManager.getPost(postId_One,accessToken)
       expect(postResp).toEqual('post some')

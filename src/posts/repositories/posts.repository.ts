@@ -39,7 +39,7 @@ export class PostsRepository {
     const user: any = await this.usersQueryRepository.getUserById(userId);
     if (!user) return false;
     const currentUser = {
-      id: user._id,
+      id: String(user._id),
       login: user.accountData.login,
     };
 
