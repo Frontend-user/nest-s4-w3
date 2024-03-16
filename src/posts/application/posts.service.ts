@@ -1,23 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { PostInputCreateModel, PostViewModel } from '../types/post.types';
-import { Post, PostDocumentType } from '../domain/posts-schema';
-import { PostsRepository } from '../repositories/posts.repository';
-import { PostsQueryRepository } from '../repositories/posts.query-repository';
-import { PostsMongoDataMapper } from '../domain/posts.mongo.dm';
-import { WithId } from '../../blogs/types/blogs.types';
+import { Injectable } from "@nestjs/common";
+import { newestLikes, PostInputCreateModel, PostViewModel, usersIdsPostsLikeStatuses } from "../types/post.types";
+import { Post, PostDocumentType } from "../domain/posts-schema";
+import { PostsRepository } from "../repositories/posts.repository";
+import { PostsQueryRepository } from "../repositories/posts.query-repository";
+import { PostsMongoDataMapper } from "../domain/posts.mongo.dm";
+import { WithId } from "../../blogs/types/blogs.types";
 import { Types } from "mongoose";
+import { UsersQueryRepository } from "../../users/repositories/users.query-repository";
 
 @Injectable()
 export class PostsService {
   constructor(
     protected postsRepository: PostsRepository,
     protected postsQueryRepository: PostsQueryRepository,
+    protected usersQueryRepository: UsersQueryRepository,
   ) {}
 
-  async createPost(
-    body: PostInputCreateModel,
-    blogName: string,
-  ): Promise<WithId<PostViewModel> | false> {
+  async createPost(body: PostInputCreateModel, blogName: string): Promise<WithId<PostViewModel> | false> {
     const PostEntity: Post = Post.creatPost(body, blogName);
 
     const createdPost = await this.postsRepository.createPost(PostEntity);
@@ -31,9 +30,11 @@ export class PostsService {
   async updatePost(id: string, post: PostInputCreateModel): Promise<boolean> {
     return await this.postsRepository.updatePost(id, post);
   }
-  async updatePostLikeStatus(id: Types.ObjectId, likeStatus: string,userId:string): Promise<boolean> {
-    return await this.postsRepository.updatePostLikeStatus(id, likeStatus,userId)
+
+  async updatePostLikeStatus(postId: string, likeStatus: string, userId: string): Promise<boolean> {
+    return await this.postsRepository.updatePostLikeStatus(postId, likeStatus,userId)
   }
+
   async deleteAllData() {
     return await this.postsRepository.deleteAllData();
   }

@@ -33,9 +33,9 @@ export class PostsRepository {
     return updatePost.matchedCount === 1;
   }
 
-  async updatePostLikeStatus(id: Types.ObjectId, likeStatus:any, userId: string): Promise<boolean> {
-      likeStatus = likeStatus.likeStatus
-    console.log(likeStatus,'likeStatus');
+  secondDislike: number = 0;
+
+  async updatePostLikeStatus(id: string, likeStatus: string, userId: string): Promise<boolean> {
     const user: any = await this.usersQueryRepository.getUserById(userId);
     if (!user) return false;
     const currentUser = {
@@ -49,99 +49,177 @@ export class PostsRepository {
       addedAt: new Date().toISOString(),
       login: currentUser.login,
     };
-    const newestLike: newestLikes = {
-      addedAt: new Date().toISOString(),
-      userId: currentUser.id,
-      login: currentUser.login,
-    };
 
-    const posts: any = await this.postModel.find({});
-    console.log(posts);
     const post: any = await this.postModel.findOne({ _id: id });
-    //
-
-    // post.extendedLikesInfo.myStatus = likeStatus;
-    // post.markModified("extendedLikesInfo");
-    // await post.save();
-    // await this.postModel.findByIdAndUpdate(id, post)
-    //
-    // return true;
-    // console.log(post);
-
     const postForLikeArray: any = await this.postModel.findOne({ _id: id }).lean();
+
     const postLikeStatusesArray: usersIdsLikeStatuses[] = postForLikeArray.extendedLikesInfo.usersLikeStatuses;
-    console.log(postLikeStatusesArray);
-    const findObject = postLikeStatusesArray.find((o) => o.userId === currentUser.id);
 
-    if (!findObject && likeStatus !== LIKE_STATUSES.NONE) {
-      if (likeStatus === LIKE_STATUSES.LIKE) {
-        let currentLikes = post.extendedLikesInfo.likesCount;
+
+    const currentUserLikeStatusData = postLikeStatusesArray.find((o) => o.userId === currentUser.id);
+    const allUsersLikeStatusesData: usersIdsLikeStatuses[] | undefined = postLikeStatusesArray;
+
+    let currentLikes = post.extendedLikesInfo.likesCount;
+    let currentDislikes = post.extendedLikesInfo.dislikesCount;
+
+    if (likeStatus === LIKE_STATUSES.LIKE) {
+      if (currentUserLikeStatusData?.likeStatus !== LIKE_STATUSES.LIKE) {
         currentLikes++;
-        post.extendedLikesInfo.likesCount = currentLikes;
-      } else {
-        let currentDislikes = post.extendedLikesInfo.dislikesCount;
+        if (currentUserLikeStatusData?.likeStatus === LIKE_STATUSES.DISLIKE) {
+          currentDislikes--;
+        }
+        const currentLikesStatusInArrayIndex: any = allUsersLikeStatusesData.findIndex((i) => i.userId === currentUser.id);
+
+        if (currentLikesStatusInArrayIndex > -1) {
+          allUsersLikeStatusesData.splice(currentLikesStatusInArrayIndex, 1);
+          allUsersLikeStatusesData.push(userIdLikeStatus);
+        } else {
+          allUsersLikeStatusesData.push(userIdLikeStatus);
+        }
+      }
+    }
+    if (likeStatus === LIKE_STATUSES.DISLIKE) {
+      if (currentUserLikeStatusData?.likeStatus !== LIKE_STATUSES.DISLIKE) {
         currentDislikes++;
-        post.extendedLikesInfo.dislikesCount = currentDislikes;
-      }
+        if (currentUserLikeStatusData?.likeStatus === LIKE_STATUSES.LIKE) {
+          currentLikes--;
+        }
 
-      post.extendedLikesInfo.myStatus = likeStatus;
-      post.extendedLikesInfo.usersLikeStatuses.push(userIdLikeStatus);
-      post.markModified('extendedLikesInfo')
-      await post.save()
-      // await this.postModel.findByIdAndUpdate(id, post);
+        const currentLikesStatusInArrayIndex: any = allUsersLikeStatusesData.findIndex((i) => i.userId === currentUser.id);
+        if (currentLikesStatusInArrayIndex > -1) {
+          allUsersLikeStatusesData.splice(currentLikesStatusInArrayIndex, 1);
+          allUsersLikeStatusesData.push(userIdLikeStatus);
+        } else {
+          allUsersLikeStatusesData.push(userIdLikeStatus);
+        }
+      }
     }
 
-    if (likeStatus !== LIKE_STATUSES.NONE && findObject && findObject.likeStatus !== likeStatus) {
-      const getPost: any = await this.postModel.findOne({ _id: id });
-      let dislikes: number = getPost.extendedLikesInfo.dislikesCount;
-      let likes: number = getPost.extendedLikesInfo.likesCount;
-      if (likeStatus === LIKE_STATUSES.DISLIKE) {
-        dislikes++;
-        likes--;
-      } else {
-        likes++;
-        dislikes--;
+    if (likeStatus === LIKE_STATUSES.NONE) {
+      if (currentUserLikeStatusData?.likeStatus !== LIKE_STATUSES.NONE) {
+        if (currentUserLikeStatusData?.likeStatus === LIKE_STATUSES.LIKE) {
+          currentLikes--;
+        }
+        if (currentUserLikeStatusData?.likeStatus === LIKE_STATUSES.DISLIKE) {
+          currentDislikes--;
+        }
+        const itemToPullIndex = allUsersLikeStatusesData.findIndex((item) => item.userId === currentUser.id);
+        if(itemToPullIndex > -1){
+          allUsersLikeStatusesData.splice(itemToPullIndex, 1);
+        }
+
       }
-
-      await this.postModel.updateOne(
-        { _id: id, "extendedLikesInfo.usersLikeStatuses.userId": currentUser.id },
-        {
-          $set: {
-            "extendedLikesInfo.myStatus": likeStatus,
-            "extendedLikesInfo.likesCount": likes,
-            "extendedLikesInfo.dislikesCount": dislikes,
-            "extendedLikesInfo.usersLikeStatuses.$.likeStatus": likeStatus,
-          },
-        },
-      );
-      const updatedPost: any = await this.postModel.findOne({ _id: id });
     }
-
-    if (likeStatus === LIKE_STATUSES.NONE && findObject && likeStatus !== post.extendedLikesInfo.myStatus) {
-      const getPost: any = await this.postModel.findOne({ _id: id });
-      let dislikes: number = getPost.extendedLikesInfo.dislikesCount;
-      let likes: number = getPost.extendedLikesInfo.likesCount;
-      const pastLikeStatus = getPost.extendedLikesInfo.myStatus;
-      if (pastLikeStatus === LIKE_STATUSES.DISLIKE) {
-        dislikes--;
-      } else {
-        likes--;
-      }
-      await this.postModel.updateOne(
-        { _id: id },
-        {
-          $set: {
-            "extendedLikesInfo.myStatus": LIKE_STATUSES.NONE,
-            "extendedLikesInfo.likesCount": likes,
-            "extendedLikesInfo.dislikesCount": dislikes,
-          },
-          $pull: { "extendedLikesInfo.usersLikeStatuses": { userId: currentUser.id } },
-        },
-      );
-    }
-
+    post.extendedLikesInfo.dislikesCount = currentDislikes;
+    post.extendedLikesInfo.likesCount = currentLikes;
+    post.extendedLikesInfo.myStatus = likeStatus;
+    post.extendedLikesInfo.usersLikeStatuses = allUsersLikeStatusesData;
+    post.markModified("extendedLikesInfo");
+    await post.save();
+    this.secondDislike++;
     return true;
   }
+
+  // async updatePostLikeStatus(id: Types.ObjectId, likeStatus:any, userId: string): Promise<boolean> {
+  //     likeStatus = likeStatus.likeStatus
+  //   console.log(likeStatus,'likeStatus');
+  //   const user: any = await this.usersQueryRepository.getUserById(userId);
+  //   if (!user) return false;
+  //   const currentUser = {
+  //     id: String(user._id),
+  //     login: user.accountData.login,
+  //   };
+  //
+  //   const userIdLikeStatus: usersIdsPostsLikeStatuses = {
+  //     userId: currentUser.id,
+  //     likeStatus: likeStatus,
+  //     addedAt: new Date().toISOString(),
+  //     login: currentUser.login,
+  //   };
+  //   const newestLike: newestLikes = {
+  //     addedAt: new Date().toISOString(),
+  //     userId: currentUser.id,
+  //     login: currentUser.login,
+  //   };
+  //
+  //   const posts: any = await this.postModel.find({});
+  //   console.log(posts);
+  //   const post: any = await this.postModel.findOne({ _id: id });
+  //
+  //   const postForLikeArray: any = await this.postModel.findOne({ _id: id }).lean();
+  //   const postLikeStatusesArray: usersIdsLikeStatuses[] = postForLikeArray.extendedLikesInfo.usersLikeStatuses;
+  //   console.log(postLikeStatusesArray);
+  //   const findObject = postLikeStatusesArray.find((o) => o.userId === currentUser.id);
+  //
+  //   if (!findObject && likeStatus !== LIKE_STATUSES.NONE) {
+  //     if (likeStatus === LIKE_STATUSES.LIKE) {
+  //       let currentLikes = post.extendedLikesInfo.likesCount;
+  //       currentLikes++;
+  //       post.extendedLikesInfo.likesCount = currentLikes;
+  //     } else {
+  //       let currentDislikes = post.extendedLikesInfo.dislikesCount;
+  //       currentDislikes++;
+  //       post.extendedLikesInfo.dislikesCount = currentDislikes;
+  //     }
+  //
+  //     post.extendedLikesInfo.myStatus = likeStatus;
+  //     post.extendedLikesInfo.usersLikeStatuses.push(userIdLikeStatus);
+  //     post.markModified('extendedLikesInfo')
+  //     await post.save()
+  //     // await this.postModel.findByIdAndUpdate(id, post);
+  //   }
+  //
+  //   if (likeStatus !== LIKE_STATUSES.NONE && findObject && findObject.likeStatus !== likeStatus) {
+  //     const getPost: any = await this.postModel.findOne({ _id: id });
+  //     let dislikes: number = getPost.extendedLikesInfo.dislikesCount;
+  //     let likes: number = getPost.extendedLikesInfo.likesCount;
+  //     if (likeStatus === LIKE_STATUSES.DISLIKE) {
+  //       dislikes++;
+  //       likes--;
+  //     } else {
+  //       likes++;
+  //       dislikes--;
+  //     }
+  //
+  //     await this.postModel.updateOne(
+  //       { _id: id, "extendedLikesInfo.usersLikeStatuses.userId": currentUser.id },
+  //       {
+  //         $set: {
+  //           "extendedLikesInfo.myStatus": likeStatus,
+  //           "extendedLikesInfo.likesCount": likes,
+  //           "extendedLikesInfo.dislikesCount": dislikes,
+  //           "extendedLikesInfo.usersLikeStatuses.$.likeStatus": likeStatus,
+  //         },
+  //       },
+  //     );
+  //     const updatedPost: any = await this.postModel.findOne({ _id: id });
+  //   }
+  //
+  //   if (likeStatus === LIKE_STATUSES.NONE && findObject && likeStatus !== post.extendedLikesInfo.myStatus) {
+  //     const getPost: any = await this.postModel.findOne({ _id: id });
+  //     let dislikes: number = getPost.extendedLikesInfo.dislikesCount;
+  //     let likes: number = getPost.extendedLikesInfo.likesCount;
+  //     const pastLikeStatus = getPost.extendedLikesInfo.myStatus;
+  //     if (pastLikeStatus === LIKE_STATUSES.DISLIKE) {
+  //       dislikes--;
+  //     } else {
+  //       likes--;
+  //     }
+  //     await this.postModel.updateOne(
+  //       { _id: id },
+  //       {
+  //         $set: {
+  //           "extendedLikesInfo.myStatus": LIKE_STATUSES.NONE,
+  //           "extendedLikesInfo.likesCount": likes,
+  //           "extendedLikesInfo.dislikesCount": dislikes,
+  //         },
+  //         $pull: { "extendedLikesInfo.usersLikeStatuses": { userId: currentUser.id } },
+  //       },
+  //     );
+  //   }
+  //
+  //   return true;
+  // }
 
   async deletePost(id: string): Promise<any> {
     const response = await this.postModel.deleteOne({ _id: new Types.ObjectId(id) });

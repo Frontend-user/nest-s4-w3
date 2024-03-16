@@ -5,7 +5,12 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../app.module";
 import { appSettings } from "../app.settings";
 import { AuthController } from "../auth/presentation/auth.controller";
-import { correctLoginData, correctRegistrationData } from "./registration.data";
+import {
+  correctLoginData,
+  correctLoginData_SECOND_USER,
+  correctRegistrationData,
+  correctRegistrationDataSECONDYSER,
+} from "./registration.data";
 import { UserForTestModel } from "../users/domain/users-schema";
 
 describe("Blogs", () => {
@@ -54,6 +59,16 @@ describe("Blogs", () => {
       const reponse: any = await testManager.registration(correctRegistrationData);
       expect(reponse.status).toEqual(204);
     });
+    it("Correct registration SECOND USER expect 204", async () => {
+      const reponse: any = await testManager.registration(correctRegistrationDataSECONDYSER);
+      expect(reponse.status).toEqual(204);
+    });
+    let accessToken_2:string
+    it("Correct LOGIN SECOND should return true", async () => {
+      const reponse: any = await testManager.loginCreatedUserByRegistration(correctLoginData_SECOND_USER);
+      accessToken_2 = reponse.accessToken
+      expect(reponse).toEqual(204);
+    });
     it("Correct RegistrationConfirmation should return true", async () => {
       const reponse: any = await testManager.registrationConfirmation(confirmationCode);
       expect(reponse).toEqual(204);
@@ -81,7 +96,42 @@ describe("Blogs", () => {
       expect(postId_One).toEqual("Some POst Id");
     });
 
+    it('LIKE POST BY FIRST USER', async () => {
+      const postData = await testManager.likeEntity(
+        ENTITIES.POSTS, accessToken,
+        postId_One, LIKE_STATUSES.LIKE)
+      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+      // console.log('LIKE COMMENT', 'comment', comment)
+      expect(JSON.parse(postData.text)).toEqual('some')
+    }); it('DISLIKE POST BY SECOND USER', async () => {
+      const postData = await testManager.likeEntity(
+        ENTITIES.POSTS, accessToken_2,
+        postId_One, LIKE_STATUSES.LIKE)
+      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+      // console.log('LIKE COMMENT', 'comment', comment)
+      expect(JSON.parse(postData.text)).toEqual('some')
+    });
+    it('NONE POST BY SECOND USER', async () => {
+      const postData = await testManager.likeEntity(
+        ENTITIES.POSTS, accessToken_2,
+        postId_One, LIKE_STATUSES.NONE)
+      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+      // console.log('LIKE COMMENT', 'comment', comment)
+      expect(JSON.parse(postData.text)).toEqual('some')
+    });
 
+    it('NONE POST BY Firsr USER', async () => {
+      const postData = await testManager.likeEntity(
+        ENTITIES.POSTS, accessToken,
+        postId_One, LIKE_STATUSES.NONE)
+      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+      // console.log('LIKE COMMENT', 'comment', comment)
+      expect(JSON.parse(postData.text)).toEqual('some')
+    });
+    it('Get post by id', async ()=>{
+      const postResp = await testManager.getPost(postId_One,accessToken_2)
+      expect(postResp).toEqual('post some')
+    })
     // it(`LIKE POST BY REG USER`, async () => {
     //   const postResp = await testManager.craetePostByBlogId(blogId_One);
     //   postId_One = postResp.id
@@ -89,27 +139,92 @@ describe("Blogs", () => {
     //   expect(postId_One).toEqual("Some POst Id");
     // });
 
+    //
+    // it('LIKE POST', async () => {
+    //  const postData = await testManager.likeEntity(
+    //    ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.LIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('LIKE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.LIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('DISLIKE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.DISLIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('DISLIKE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.DISLIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('LIKE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.LIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    //
+    // it('NONE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.NONE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('NONE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.NONE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
 
-    it('LIKE POST', async () => {
-     const postData = await testManager.likeEntity(
-       ENTITIES.POSTS, accessToken,
-        postId_One, LIKE_STATUSES.LIKE)
-      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
-      // console.log('LIKE COMMENT', 'comment', comment)
-      expect(JSON.parse(postData.text)).toEqual('some')
-    });
-    it('LIKE POST', async () => {
-      const postData = await testManager.likeEntity(
-        ENTITIES.POSTS, accessToken,
-        postId_One, LIKE_STATUSES.LIKE)
-      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
-      // console.log('LIKE COMMENT', 'comment', comment)
-      expect(JSON.parse(postData.text)).toEqual('some')
-    });
-    it('Get post by id', async ()=>{
-      const postResp = await testManager.getPost(postId_One,accessToken)
-      expect(postResp).toEqual('post some')
-    })
+    //
+    //
+    // it('LIKE POST BY SECOND USER', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken_2,
+    //     postId_One, LIKE_STATUSES.LIKE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('NONE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken,
+    //     postId_One, LIKE_STATUSES.NONE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+    // it('NONE POST', async () => {
+    //   const postData = await testManager.likeEntity(
+    //     ENTITIES.POSTS, accessToken_2,
+    //     postId_One, LIKE_STATUSES.NONE)
+    //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    //   // console.log('LIKE COMMENT', 'comment', comment)
+    //   expect(JSON.parse(postData.text)).toEqual('some')
+    // });
+
 
   });
 });

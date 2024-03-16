@@ -100,10 +100,10 @@ export class PostsController {
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put("/:postId/like-status")
-  async updatePostLikeStatus(@Body() likeStatus: LikeStatus, @Param("postId") postId: string, @Req() req: any) {
+  async updatePostLikeStatus(@Body('likeStatus') likeStatus: LikeStatus, @Param("postId") postId: string, @Req() req: any) {
     const userId = req.headers.userId;
     try {
-      const response1: any = await this.postsService.updatePostLikeStatus(new Types.ObjectId(postId), likeStatus, userId);
+      const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
       console.log(response1, "r1");
       const response: any = await this.postsQueryRepository.getPostById(postId);
       if (!response) {

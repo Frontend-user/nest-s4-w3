@@ -126,7 +126,7 @@ export class TestManager {
     this.post_1_id = JSON.parse(this.post_1.text)["id"];
     const getOnePost = await request(this.app.getHttpServer())
       .get(`/posts/${postId}`)
-      // .set("authorization", "Bearer " + `${accessToken}`)
+      .set("authorization", "Bearer " + `${accessToken}`)
     // expect(JSON.parse(getOnePost.text)).toEqual({
     //   id: expect.any(String),
     //   title: expect.any(String),

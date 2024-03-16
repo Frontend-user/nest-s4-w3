@@ -401,16 +401,6 @@ window.onload = function() {
               }
             }
           ],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "responses": {
             "204": {
               "description": ""
