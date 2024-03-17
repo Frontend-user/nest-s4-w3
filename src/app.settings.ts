@@ -28,18 +28,6 @@ export const appSettings = (app: INestApplication) => {
                         })
                     }
                 })
-                // errors.forEach((e) => {
-                //     const constraintKeys = Object.keys(e.constraints)
-                //     constraintKeys.forEach((ckey) => {
-                //         errorsMessages.push(
-                //             {
-                //                 message: e.constraints[ckey],
-                //                 field: e.property
-                //             }
-                //         )
-                //     })
-                //
-                // })
                 throw new BadRequestException({errorsMessages})
             }
 

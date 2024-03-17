@@ -70,7 +70,7 @@ export class PostsController {
   @HttpCode(201)
   @Post()
   async createPost(@Body() body: any) {
-   return  await this.postsService.createPost(body);
+    return await this.postsService.createPost(body);
   }
 
   @UseGuards(BasicAuthGuard)
@@ -98,7 +98,10 @@ export class PostsController {
     const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
     console.log(response1, "r1");
     if (!response1) {
-      throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
+      // const returnNotFoundException = () => {
+         throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
+      // };
+      // returnNotFoundException()
     }
     const response: any = await this.postsQueryRepository.getPostById(postId);
     if (!response) {

@@ -7,9 +7,13 @@ import { appSettings } from "../app.settings";
 import { AuthController } from "../auth/presentation/auth.controller";
 import {
   correctLoginData,
-  correctLoginData_SECOND_USER, correctLoginData_USER_3, correctLoginData_USER_4,
+  correctLoginData_SECOND_USER,
+  correctLoginData_USER_3,
+  correctLoginData_USER_4,
   correctRegistrationData,
-  correctRegistrationDataSECONDYSER, USER_3, USER_4,
+  correctRegistrationDataSECONDYSER,
+  USER_3,
+  USER_4,
 } from "./registration.data";
 import { UserForTestModel } from "../users/domain/users-schema";
 
@@ -48,9 +52,8 @@ describe("Blogs", () => {
   });
 
   const confirmationCode = "1234";
-// #TESTSTART
+  // #TESTSTART
   describe("Posts LIKESTATUS", () => {
-
     it("TEST DELETE ALL", async () => {
       await testManager.deleteAll();
     });
@@ -73,33 +76,33 @@ describe("Blogs", () => {
       expect(reponse.status).toEqual(204);
     });
 
-    let accessToken_2:string
+    let accessToken_2: string;
     it("Correct LOGIN SECOND should return true", async () => {
       const reponse: any = await testManager.loginCreatedUserByRegistration(correctLoginData_SECOND_USER);
-      accessToken_2 = reponse.accessToken
+      accessToken_2 = reponse.accessToken;
       expect(reponse).toEqual(204);
     });
-    let accessToken_3:string
+    let accessToken_3: string;
     it("Correct LOGIN SECOND should return true", async () => {
       const reponse: any = await testManager.loginCreatedUserByRegistration(correctLoginData_USER_3);
-      accessToken_3 = reponse.accessToken
+      accessToken_3 = reponse.accessToken;
       expect(reponse).toEqual(204);
     });
 
-    let accessToken_4:string
+    let accessToken_4: string;
     it("Correct LOGIN SECOND should return true", async () => {
       const reponse: any = await testManager.loginCreatedUserByRegistration(correctLoginData_USER_4);
-      accessToken_4 = reponse.accessToken
+      accessToken_4 = reponse.accessToken;
       expect(reponse).toEqual(204);
     });
     it("Correct RegistrationConfirmation should return true", async () => {
       const reponse: any = await testManager.registrationConfirmation(confirmationCode);
       expect(reponse).toEqual(204);
     });
-    let accessToken:string
+    let accessToken: string;
     it("Correct loginCreatedUserByRegistration should return true", async () => {
       const reponse: any = await testManager.loginCreatedUserByRegistration(correctLoginData);
-      accessToken = reponse.accessToken
+      accessToken = reponse.accessToken;
       expect(reponse).toEqual(204);
     });
 
@@ -112,16 +115,16 @@ describe("Blogs", () => {
     });
 
     let postId_One: any;
-    let POST_2:any
-    let POST_3:any
-    let POST_4:any
-    let POST_5:any
-    let POST_6:any
+    let POST_2: any;
+    let POST_3: any;
+    let POST_4: any;
+    let POST_5: any;
+    let POST_6: any;
 
     it(`CREATE POST BY BLOG ID`, async () => {
       const postResp = await testManager.craetePostByBlogIdINPOSTDATA(blogId_One);
-      postId_One = postResp
-      expect(postResp).toEqual("Some POst Id");
+      postId_One = postResp;
+      expect(JSON.parse(postResp.text)).toEqual("Some POst Id");
     });
     // it(`CREATE POST_2 BY BLOG ID`, async () => {
     //   const postResp = await testManager.craetePostByBlogId(blogId_One);
@@ -156,14 +159,11 @@ describe("Blogs", () => {
     //   expect(POST_6).toEqual("Some POst Id");
     // });
 
-
-    it('LIKE POST1 BY  USER 1', async () => {
-      const postData = await testManager.likeEntity(
-        ENTITIES.POSTS, accessToken,
-        postId_One, LIKE_STATUSES.NONE)
-      console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
+    it("LIKE POST1 BY  USER 1", async () => {
+      const postData = await testManager.likeEntity(ENTITIES.POSTS, accessToken, postId_One, LIKE_STATUSES.NONE);
+      console.log(postData.body.extendedLikesInfo, "comment.body.likesInfo");
       // console.log('LIKE COMMENT', 'comment', comment)
-      expect(postData).toEqual('status')
+      expect(postData).toEqual("status");
     });
 
     // it('LIKE POST1 BY  USER 2', async () => {
@@ -276,10 +276,9 @@ describe("Blogs", () => {
     //   // console.log('LIKE COMMENT', 'comment', comment)
     //   expect(JSON.parse(postData.text)).toEqual('some')
     // });
-    it('Get post by id', async ()=>{
-      const postResp = await testManager.getPosts(accessToken)
-      expect(postResp).toEqual('post some')
-    })
-
+    it("Get post by id", async () => {
+      const postResp = await testManager.getPosts(accessToken);
+      expect(postResp).toEqual("post some");
+    });
   });
 });

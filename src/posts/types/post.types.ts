@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, Length } from "class-validator";
+import { IsDefined, IsNotEmpty, IsString, Length } from "class-validator";
 
 export type LikeStatus = "None" | "Like" | "Dislike";
 export type usersIdsPostsLikeStatuses = { userId: string; likeStatus: string; addedAt: string; login: string };
@@ -64,15 +64,18 @@ export class PostInputCreateModel {
   @Transform(({ value }) => value?.trim())
   @Length(2, 30)
   @IsString()
+  @IsDefined()
   title: string;
 
   @Transform(({ value }) => value?.trim())
   @Length(2, 100)
   @IsString()
+  @IsDefined()
   shortDescription: string;
 
   @Transform(({ value }) => value?.trim())
   @Length(2, 1000)
+  @IsDefined()
   @IsString()
   content: string;
 
