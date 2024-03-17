@@ -118,10 +118,10 @@ describe("Blogs", () => {
     let POST_5:any
     let POST_6:any
 
-    it(`CREATE POST_2 BY BLOG ID`, async () => {
-      const postResp = await testManager.craetePostByBlogId(blogId_One);
+    it(`CREATE POST BY BLOG ID`, async () => {
+      const postResp = await testManager.craetePostByBlogId('s');
       postId_One = postResp.id
-      expect(postId_One).toEqual("Some POst Id");
+      expect(postResp).toEqual("Some POst Id");
     });
     // it(`CREATE POST_2 BY BLOG ID`, async () => {
     //   const postResp = await testManager.craetePostByBlogId(blogId_One);
