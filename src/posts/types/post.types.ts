@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsString, Length, Validate } from "class-validator";
+import { IsNotEmpty, IsString, Length } from "class-validator";
 
 export type LikeStatus = "None" | "Like" | "Dislike";
 export type usersIdsPostsLikeStatuses = { userId: string; likeStatus: string; addedAt: string; login: string };
@@ -16,7 +16,7 @@ export class LikeStatusClass {
   @Transform(({ value }) => value?.trim())
   @IsNotEmpty()
   @IsString()
-  likeStatus: string;
+  likeStatus: LikeStatus;
 }
 
 export class PostInputCreateModelWithoutBlogId {
