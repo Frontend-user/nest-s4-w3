@@ -79,9 +79,6 @@ export class PostInputCreateModel {
 
   @Transform(({ value }) => value?.trim())
   @IsString()
-  @Validate(CustomTextLength, {
-    message: "BLog id is not existed!",
-  })
   blogId: string;
 }
 

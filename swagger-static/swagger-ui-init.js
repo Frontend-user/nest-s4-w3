@@ -314,6 +314,16 @@ window.onload = function() {
         "post": {
           "operationId": "PostsController_createPost",
           "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostInputCreateModel"
+                }
+              }
+            }
+          },
           "responses": {
             "201": {
               "description": ""
