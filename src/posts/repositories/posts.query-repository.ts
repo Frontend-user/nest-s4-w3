@@ -89,12 +89,6 @@ export class PostsQueryRepository {
   }
 
   async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id: string | Types.ObjectId, accessToken?:string): Promise<any> {
-    // try {
-    //   await this.postModel.find({ blogId: id }).lean();
-    // } catch (e) {
-    //   return false;
-    // }
-
     const query = this.postModel.find({ blogId: id });
     const totalCount = this.postModel.find({ blogId: id });
 

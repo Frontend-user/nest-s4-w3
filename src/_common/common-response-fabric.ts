@@ -4,7 +4,7 @@ import {Injectable} from "@nestjs/common";
 @Injectable()
 export class CommonResponseFabric {
      createAndGetResponse<T>(Queries: any, items: T[], totalCount: number, some): UserResponseType {
-        let changeItems = items.map((b: T) => some.toView(b));
+        const changeItems = items.map((b: T) => some.toView(b));
         const pagesCount = Math.ceil(totalCount / Queries.newPageSize);
 
         return {

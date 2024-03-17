@@ -37,14 +37,13 @@ export class PostInputCreateModelWithoutBlogId {
 }
 
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from "class-validator";
-import { InjectModel } from "@nestjs/mongoose";
-import { Blog } from "../../blogs/domain/blogs-schema";
-import { Model, Types } from "mongoose";
+
 import { BlogsQueryRepository } from "../../blogs/repositories/blogs.query-repository";
 
 @ValidatorConstraint({ name: "customText", async: false })
 export class CustomTextLength implements ValidatorConstraintInterface {
-  constructor(protected blogsQueryRepository: BlogsQueryRepository) {}
+  constructor(protected blogsQueryRepository: BlogsQueryRepository) {
+  }
 
   async validate(text: string, args: ValidationArguments) {
     const isExistBlog = await this.blogsQueryRepository.getBlogById(text);

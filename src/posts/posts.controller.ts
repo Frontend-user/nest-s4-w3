@@ -28,6 +28,8 @@ import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
 import { Types } from "mongoose";
 import { BearerAuthGuard } from "../auth/guards/bearer-auth.guard";
 import { Request } from "express";
+import { LIKE_STATUSES } from "../_common/constants";
+import { validate } from "class-validator";
 
 @Controller("/posts")
 export class PostsController {
@@ -96,23 +98,22 @@ export class PostsController {
       throw new HttpException("Falied updatePost", HttpStatus.NOT_FOUND);
     }
   }
+
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put("/:postId/like-status")
   async updatePostLikeStatus(@Body() body: LikeStatusClass, @Param("postId") postId: string, @Req() req: any) {
     const userId = req.headers.userId;
-    try {
-      const response1: any = await this.postsService.updatePostLikeStatus(postId, body.likeStatus, userId);
+    const { likeStatus } = body;
+
+      const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
       console.log(response1, "r1");
       const response: any = await this.postsQueryRepository.getPostById(postId);
       if (!response) {
         // return 'aaaa'
         throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
       }
-    } catch (error) {
-      // return {catchError: error}
-      throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
-    }
+
   }
 
   // // @UseGuards(BearerAuthGuard)
