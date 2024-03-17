@@ -69,19 +69,8 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @HttpCode(201)
   @Post()
-  async createPost(@Body() body: PostInputCreateModel) {
-    const getBlog: any = await this.blogsQueryRepository.getBlogById(body.blogId);
-    if (getBlog) {
-      try {
-        const postId = await this.postsService.createPost(body, getBlog.name);
-        if (postId) {
-          return postId;
-        }
-        throw new HttpException("Falied createPost", HttpStatus.BAD_REQUEST);
-      } catch (error) {
-        throw new HttpException("Falied createPost", HttpStatus.BAD_REQUEST);
-      }
-    }
+  async createPost(@Body() body: any) {
+    await this.postsService.createPost(body);
   }
 
   @UseGuards(BasicAuthGuard)
@@ -106,14 +95,16 @@ export class PostsController {
     const userId = req.headers.userId;
     const { likeStatus } = body;
 
-      const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
-      console.log(response1, "r1");
-      const response: any = await this.postsQueryRepository.getPostById(postId);
-      if (!response) {
-        // return 'aaaa'
-        throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
-      }
-
+    const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
+    console.log(response1, "r1");
+    if (!response1) {
+      throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
+    }
+    const response: any = await this.postsQueryRepository.getPostById(postId);
+    if (!response) {
+      // return 'aaaa'
+      throw new HttpException("Falied update Post LikeStatus", HttpStatus.NOT_FOUND);
+    }
   }
 
   // // @UseGuards(BearerAuthGuard)

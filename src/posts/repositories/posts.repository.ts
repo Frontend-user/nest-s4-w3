@@ -36,6 +36,8 @@ export class PostsRepository {
   secondDislike: number = 0;
 
   async updatePostLikeStatus(id: string, likeStatus: string, userId: string): Promise<boolean> {
+   try {
+
     const user: any = await this.usersQueryRepository.getUserById(userId);
     if (!user) return false;
     const currentUser = {
@@ -118,6 +120,10 @@ export class PostsRepository {
     await post.save();
     this.secondDislike++;
     return true;
+   }
+    catch {
+     return false
+    }
   }
 
   // async updatePostLikeStatus(id: Types.ObjectId, likeStatus:any, userId: string): Promise<boolean> {

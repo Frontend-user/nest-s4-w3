@@ -1,16 +1,16 @@
 import request from "supertest";
 import { INestApplication } from "@nestjs/common";
 import { correctRegistrationData } from "./registration.data";
-export const ENTITIES = {
-  POSTS: 'posts',
-  COMMENTS: 'comments',
 
-}
+export const ENTITIES = {
+  POSTS: "posts",
+  COMMENTS: "comments",
+};
 export const LIKE_STATUSES = {
-  LIKE: 'Like',
-  DISLIKE: 'Dislike',
-  NONE: 'None',
-}
+  LIKE: "Like",
+  DISLIKE: "Dislike",
+  NONE: "None",
+};
 export const correctBlogData = {
   name: "name",
   description: "description",
@@ -62,11 +62,11 @@ export class TestManager {
     return JSON.parse(getOneBlog.text);
   }
 
-  async getPostsByBlogId(blogId: string,accessToken?:string) {
+  async getPostsByBlogId(blogId: string, accessToken?: string) {
     console.log(blogId, "blogid");
     const response = await request(this.app.getHttpServer())
       .get(`/blogs/${blogId}/posts`)
-      .set("authorization", "Bearer " + `${accessToken}`)
+      .set("authorization", "Bearer " + `${accessToken}`);
     expect(response.text).toEqual("fsdfdssdf");
     expect(JSON.parse(response.text)).toEqual("fsdfdssdf");
   }
@@ -90,6 +90,15 @@ export class TestManager {
   async deletePost(postId: string) {
     this.post_1 = await request(this.app.getHttpServer()).delete(`/posts/${postId}`);
     return JSON.parse(this.post_1.text);
+  }
+
+  async craetePostByBlogIdINPOSTDATA(blogId: string) {
+    // correctPostDataCREATEPOSTINBLOGS.blogId = this.blog_1_id;
+    const post = await request(this.app.getHttpServer())
+      .post(`/posts`)
+      .send({ ...correctPostDataCREATEPOSTINBLOGS, blogId: blogId })
+      .set("Authorization", `${SUPERADMIN_TOKEN}`);
+    return post;
   }
 
   async craetePostByBlogId(blogId: string) {
@@ -120,15 +129,16 @@ export class TestManager {
     //     ],
     //   },
     // });
-    this.post_1_id = JSON.parse(this.post_1.text)["id"];
-    return JSON.parse(this.post_1.text);
+    return this.post_1;
+    // this.post_1_id = JSON.parse(this.post_1.text)["id"];
+    // return JSON.parse(this.post_1.text);
   }
 
-  async getPost(postId: string,accessToken:string) {
+  async getPost(postId: string, accessToken: string) {
     this.post_1_id = JSON.parse(this.post_1.text)["id"];
     const getOnePost = await request(this.app.getHttpServer())
       .get(`/posts/${postId}`)
-      .set("authorization", "Bearer " + `${accessToken}`)
+      .set("authorization", "Bearer " + `${accessToken}`);
     // expect(JSON.parse(getOnePost.text)).toEqual({
     //   id: expect.any(String),
     //   title: expect.any(String),
@@ -153,10 +163,10 @@ export class TestManager {
     return JSON.parse(getOnePost.text);
   }
 
-  async getPosts(accessToken?:string) {
+  async getPosts(accessToken?: string) {
     const getOnePost = await request(this.app.getHttpServer())
       .get(`/posts`)
-      .set("authorization", "Bearer " + `${accessToken}`)
+      .set("authorization", "Bearer " + `${accessToken}`);
 
     expect(JSON.parse(getOnePost.text)).toEqual([]);
   }
@@ -260,11 +270,11 @@ export class TestManager {
     return response;
   }
 
-  async likeEntity(entityUrl:string,accessToken:string, entityId: string,likeStatus:string){
+  async likeEntity(entityUrl: string, accessToken: string, entityId: string, likeStatus: string) {
     const response: any = await request(this.httpServer)
       .put(`/${entityUrl}/${entityId}/like-status`)
-      .set('authorization', 'Bearer ' + accessToken)
-      .send({"likeStatus":likeStatus})
-    return response
+      .set("authorization", "Bearer " + accessToken)
+      .send({ likeStatus: likeStatus });
+    return response;
   }
 }

@@ -119,8 +119,8 @@ describe("Blogs", () => {
     let POST_6:any
 
     it(`CREATE POST BY BLOG ID`, async () => {
-      const postResp = await testManager.craetePostByBlogId('s');
-      postId_One = postResp.id
+      const postResp = await testManager.craetePostByBlogIdINPOSTDATA(blogId_One);
+      postId_One = postResp
       expect(postResp).toEqual("Some POst Id");
     });
     // it(`CREATE POST_2 BY BLOG ID`, async () => {
@@ -185,7 +185,7 @@ describe("Blogs", () => {
     // it('LIKE POST2 BY  USER 3', async () => {
     //   const postData = await testManager.likeEntity(
     //     ENTITIES.POSTS, accessToken_3,
-    //     POST_2, LIKE_STATUSES.LIKE)
+    //     POST_2, LIKE_STATUSES.LIKE)blogsQueryRepository
     //   console.log(postData.body.extendedLikesInfo, 'comment.body.likesInfo')
     //   // console.log('LIKE COMMENT', 'comment', comment)
     //   expect(JSON.parse(postData.text)).toEqual('some')

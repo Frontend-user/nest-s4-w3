@@ -17,7 +17,7 @@ export const appSettings = (app: INestApplication) => {
                 const errorsMessages: any = []
                 errors.forEach((e) => {
                     if (e.constraints) {
-                        let s = Object.keys(e.constraints)
+                        const s = Object.keys(e.constraints)
                         s.forEach((key) => {
                             if (e.constraints) {
                                 errorsMessages.push({
@@ -45,5 +45,6 @@ export const appSettings = (app: INestApplication) => {
 
         }
     ))
+    
     app.useGlobalFilters(new HttpExceptionFilter())///
 }

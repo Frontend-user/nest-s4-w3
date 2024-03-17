@@ -92,10 +92,7 @@ export class BlogsController {
     const blog = await this.blogsQueryRepository.getBlogById(id);
     if (blog) {
       const modifiedBody:PostInputCreateModel = {...body, blogId: String(blog._id)}
-      const post: WithId<PostViewModel> | false = await this.postsService.createPost(
-        modifiedBody,
-        blog.name,
-      );
+      const post: WithId<PostViewModel> | false = await this.postsService.createPost( modifiedBody);
       if (!post) {
         throw new HttpException("Failed createPostByBlogId", HttpStatus.NOT_FOUND);
 
