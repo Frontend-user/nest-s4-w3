@@ -89,11 +89,11 @@ export class PostsQueryRepository {
   }
 
   async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id: string | Types.ObjectId, accessToken?:string): Promise<any> {
-    try {
-      await this.postModel.find({ blogId: id }).lean();
-    } catch (e) {
-      return false;
-    }
+    // try {
+    //   await this.postModel.find({ blogId: id }).lean();
+    // } catch (e) {
+    //   return false;
+    // }
 
     const query = this.postModel.find({ blogId: id });
     const totalCount = this.postModel.find({ blogId: id });
@@ -106,7 +106,7 @@ export class PostsQueryRepository {
         const post: any = await this.getPostById(String(posts[i]._id), accessToken);
         fixArrayIds.push(post);
       }
-      return { totalCount: allPosts, posts: posts };
+      return { totalCount: allPosts, posts: fixArrayIds };
     } else return [];
   }
 }
