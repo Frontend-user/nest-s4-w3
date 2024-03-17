@@ -1,0 +1,38 @@
+yarn add jest ts-jest @types/jest supertest @types/supertest
+yarn ts-jest config:init
+
+>package.json>scripts add>
+    "test": "jest"
+
+yarn test
+
+const request = require('supertest'); //ERROR
+
+
+//  const createResponse  =    await request(app)
+     const createdCourse = createResponse.body
+     expect(createResponse).toEqual({
+            id: expect.any(Number),
+            title: 'naddsa'
+        })
+
+
+
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+};
+
+
+
+
+__tests__ / jest-e2e.config.ts
+module.exports = {
+    preset: "ts-jest",
+    "testEnvironment": "node",
+    modulePathIgnorePatterns: ["<rootDir>/dist/"],
+    testRegex: '.e2e.ts'
+}
+__tests__ / blogs.api.e2e.ts
+
+yarn add jest @types/jest mongodb-memory-server ts-jest -D

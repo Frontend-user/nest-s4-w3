@@ -1,5 +1,5 @@
 # compiled output
-my-instruments/
+#my-instruments/
 /dist
 /node_modules
 /build

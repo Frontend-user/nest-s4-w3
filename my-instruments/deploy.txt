@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "app-h1",
+  "builds": [
+    { "src": "src/index.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "src/index.ts" }
+  ]
+}
+
+
+
+
+ ssh -R s3-w4:80:localhost:3000 serveo.net
+

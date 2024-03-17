@@ -1,0 +1,14 @@
+yarn add @nestjs/swagger
+
+in main ts before app listen
+ const config = new DocumentBuilder()
+        .setTitle('Blogs-example')
+        .setDescription('The cats API description')
+        .setVersion('1.0')
+        .addTag('blogs')
+        .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('swagger', app, document);
+
+
+ yarn add @nestjs/serve-static

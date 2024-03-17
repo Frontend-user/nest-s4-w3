@@ -1,0 +1,2 @@
+yarn add inversify@5.0.5 reflect-metadata
+import in index.ts

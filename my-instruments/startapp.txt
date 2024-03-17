@@ -1,0 +1,29 @@
+ yarn init --yes
+ yarn add express
+  yarn add nodemon  typescript ts-node @types/node @types/express --dev
+  yarn tsc --init
+
+  tsconfig
+   {
+    "compilerOptions": {
+      "target": "es2016",
+      "module": "commonjs",
+    "rootDir": "./src",
+      "outDir": "./dist",
+      "strict": true,
+      "noImplicitReturns": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.test.ts"]
+  }
+
+
+  package.json
+    "scripts": {
+      "dev": "yarn nodemon --inspect dist/index.js",
+      "watch": "tsc -w"
+    },

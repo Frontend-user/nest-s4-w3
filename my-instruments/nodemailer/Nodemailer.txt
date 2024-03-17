@@ -1,0 +1,30 @@
+yarn add nodemailer
+yarn add @types/nodemailer
+
+2faktor auth включить
+
+        try {
+
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: "robersargsyan2023@gmail.com",
+                pass: "sodbsacfkrqveybm",
+            },
+        });
+
+        const info = await transport.sendMail({
+            from: 'Robert <robersargsyan2023@gmail.com>', // sender address
+            to: req.body.email,
+            subject: req.body.subject,
+            html: req.body.message,
+        });
+        console.log(info)
+
+        }
+catch (er){
+    console.log(er, 'error')
+}
+
+
+service -> manager -> mailservice.send()

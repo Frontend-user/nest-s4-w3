@@ -1,0 +1,3 @@
+yarn add ngrok
+ngrok config add-authtoken 2bdqVLqUlHEc1rZhiEjiVq0kC6K_5dC1EB4YHetD6Uor6FyFs
+yarn ngrok http 3000

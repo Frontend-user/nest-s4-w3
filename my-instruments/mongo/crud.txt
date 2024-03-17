@@ -1,0 +1,22 @@
+db.getCollection("inventory").find({item: 'blab'})
+
+db.inventory.insertOne({
+  item: 'canvas',
+  qty: 100,
+  tags: ['cotton'],
+  size: { h: 28, w: 35.5, uom: 'cm' }
+});
+
+db.getCollection("videos").insertMany([{firstName: 'GHIII', age: 24}])
+
+db.inventory.insertMany([
+{item: 'canvas', qty: 100, tags: ['cotton'], size: {h:24, w: 35.5, uom: 'cm'}},
+{item: 'blab', qty: 100, tags: ['cotton', 'stisel'], size: {h:24, w: 32.5, uom: 'cm'}},
+])
+
+db.getCollection("inventory").find({
+    item: {$regex: 'bla'}
+})
+
+db.inventory.find( { status: { $in: [ "A", "D" ] } } ) либо одно либо другое
+db.inventory.find( { status: "A", qty: { $lt: 30 } } )и то и то

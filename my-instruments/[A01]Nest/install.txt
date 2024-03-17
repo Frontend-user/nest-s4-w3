@@ -1,0 +1,21 @@
+yarn global add @nestjs/cli
+
+с sudo nest запускается
+if( nest команда не запускается) {
+which nest
+export PATH=$PATH:/путь/к/nest
+source ~/.bashrc
+}
+
+создать проект
+nest new (имя проекта)
+
+
+./main.ts
+  app.enableCors();
+
+
+
+ constructor() {
+в настройках вебшторма настроить чтобы при ctr alt l prettier использовался
+  }

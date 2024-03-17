@@ -30,8 +30,7 @@ export class RegistrationUseCase implements ICommandHandler<RegistrationUseCaseC
     if (isExistEmail) {
       throw new HttpException({ field: "email", message: "email is exist" }, 400);
     }
-    const confirmationCode = '1234'
-    // const confirmationCode = uuidv4();
+    const confirmationCode = process.env.LOCAL_CONFIRMATION_CODE || uuidv4()
     const confirmationDate = add(new Date(), { hours: 1, minutes: 3 });
     const userEmailEntity: User = await User.createUserEntity(userInputData, false, confirmationCode, confirmationDate);
 

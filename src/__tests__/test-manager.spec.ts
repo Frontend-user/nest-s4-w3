@@ -30,8 +30,8 @@ export const inCorrectUser1 = {
   email: "logimail.ru",
 };
 export const correctPostDataCREATEPOSTINBLOGS = {
-  title: "length_31-DrmM8lHeNjSykwSzQ7Her",
-  // shortDescription: "string",
+  title: "       ",
+  shortDescription: "string",
   content: "string",
 };
 const SUPERADMIN_TOKEN = "Basic YWRtaW46cXdlcnR5";

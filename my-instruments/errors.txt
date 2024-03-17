@@ -1,0 +1,14 @@
+404 -error not found
+400 - ошибся клиент фронт
+
+SENDSTATUS !!!!!!!!!!!!!!!!!!!!!!!!
+
+tests выносить все из index.ts(testROuter)
+
+// import {describe} from "node:test";  удалить
+
+Cannot find module
+js файл  у ts файла не в папке dist
+
+
+529 return надо ставить после res.sendStatus

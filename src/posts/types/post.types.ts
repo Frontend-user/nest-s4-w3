@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsDefined, IsNotEmpty, IsString, Length } from "class-validator";
+import { IsDefined, IsNotEmpty, IsString, Length, NotContains } from "class-validator";
 
 export type LikeStatus = "None" | "Like" | "Dislike";
 export type usersIdsPostsLikeStatuses = { userId: string; likeStatus: string; addedAt: string; login: string };
@@ -37,13 +37,11 @@ export class PostInputCreateModelWithoutBlogId {
 }
 
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from "class-validator";
-
 import { BlogsQueryRepository } from "../../blogs/repositories/blogs.query-repository";
 
 @ValidatorConstraint({ name: "customText", async: false })
 export class CustomTextLength implements ValidatorConstraintInterface {
-  constructor(protected blogsQueryRepository: BlogsQueryRepository) {
-  }
+  constructor(protected blogsQueryRepository: BlogsQueryRepository) {}
 
   async validate(text: string, args: ValidationArguments) {
     const isExistBlog = await this.blogsQueryRepository.getBlogById(text);
@@ -60,8 +58,32 @@ export class CustomTextLength implements ValidatorConstraintInterface {
   }
 }
 
+import { ValidationOptions, registerDecorator,  } from "class-validator";
+
+export function IsNotEmptyString(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      name: "isUppercase",
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          if (value.trim().length > 1) {
+            return true; // Разрешить отсутствующие значения
+          }
+          return false;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `${args.property} can't be a empty string`;
+        },
+      },
+    });
+  };
+}
+
 export class PostInputCreateModel {
-  @Transform(({ value }) => value?.trim())
+  @IsNotEmptyString()
   @Length(2, 30)
   @IsString()
   @IsDefined()

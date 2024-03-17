@@ -1,0 +1,2 @@
+yarn add jsonwebtoken
+        const token = jwt.sign({userId: user.password}, process.env.JWT_SECRET, {expiresIn: '100h'})

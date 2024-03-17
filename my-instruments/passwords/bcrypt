@@ -1,0 +1,5 @@
+yarn add bcrypt
+    const passwordSalt = await bcrypt.genSalt(10)
+        // genhash
+        const hash = await bcrypt.hash(authData.password,passwordSalt)
+        console.log(hash,'hash')

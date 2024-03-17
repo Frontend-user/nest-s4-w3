@@ -1,6 +1,6 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { LikeStatus, PostInputCreateModel, PostViewModel } from "../types/post.types";
-import { Post, PostDocumentType } from "../domain/posts-schema";
+import { Post  } from "../domain/posts-schema";
 import { PostsRepository } from "../repositories/posts.repository";
 import { PostsQueryRepository } from "../repositories/posts.query-repository";
 import { PostsMongoDataMapper } from "../domain/posts.mongo.dm";
@@ -33,6 +33,8 @@ export class PostsService {
 
     // Опции для валидации
     const options = {
+      transform: true,
+
       skipMissingProperties: true, // Пропустить отсутствующие свойства
     };
 
@@ -64,10 +66,6 @@ export class PostsService {
 
     const createdPost = await this.postsRepository.createPost(PostEntity);
     return createdPost ? PostsMongoDataMapper.toView(createdPost) : false;
-  }
-
-  async getPostById(id: string): Promise<PostDocumentType | null> {
-    return await this.postsQueryRepository.getPostById(id);
   }
 
   async updatePost(id: string, post: any): Promise<boolean> {

@@ -1,0 +1,6 @@
+yarn add cookie-parser
+yarn add @types/cookie-parser --dev
+ yarn add --dev js-cookie
+
+            .set('Cookie', ['refreshToken=20001'])
+app.use(cookieParser())

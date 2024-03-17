@@ -1,0 +1,25 @@
+ auth/basic/jwt/local
+ yarn add passport-jwt @nestjs/jwt @nestjs/passport passport-local @types/passport-http passport-http ???passport???
+yarn add -D @types/passport @types/passport-http
+
+  "dependencies": {
+    "@nestjs/common": "9.0.1",
+    "@nestjs/core": "9.0.1",
+    "@nestjs/jwt": "9.0.0",
+    "@nestjs/passport": "9.0.0",
+    "@nestjs/platform-express": "9.0.1",
+    "passport": "0.6.0",
+    "passport-jwt": "4.0.0",
+    "passport-local": "1.0.0",
+    "reflect-metadata": "0.1.13",
+    "rimraf": "3.0.2",
+    "rxjs": "7.5.5"
+  },
+
+      "passport-local": "1.0.0",
+      "@nestjs/passport": "9.0.0",
+      "@nestjs/jwt": "9.0.0",
+      "passport-jwt": "4.0.0"
+
+
+

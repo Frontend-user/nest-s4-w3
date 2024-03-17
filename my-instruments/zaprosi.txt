@@ -1,0 +1,30 @@
+
+//DELETE
+fetch('http://localhost:3001/hometask_01/api/videos/delete/0', {method:'DELETE'})
+.then(res=>res.json())
+.then(json=>console.log(json))
+
+//POST create
+fetch('http://localhost:3001/hometask_01/api/videos', {method:'POST', body: JSON.stringify({title:"test",id: 3}), headers: {
+    'content-type': 'application/json'
+}})
+.then(res=>res.json())
+.then(json=>console.log(json))
+
+//post
+fetch('http://localhost:3000/hometask_01/api/videos', {method:'POST', body: JSON.stringify(
+    {
+        id: 3,
+        title:"test",
+        author:'strr',
+    canBeDownloaded: true,
+    minAgeRestriction: null,
+    createdAt: '2323',
+    publicationDate: 'tring',
+    availableResolutions: ['p144']
+    }),
+       headers: {
+    'content-type': 'application/json'
+}})
+.then(res=>res.json())
+.then(json=>console.log(json))

@@ -1,0 +1,6 @@
+yarn add dotenv --dev
+yarn add mongodb
+const MongoCLient = require("mongodb");
+
+import dotenv from 'dotenv'
+dotenv.config()
