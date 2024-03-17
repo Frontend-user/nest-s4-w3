@@ -76,6 +76,7 @@ export class PostsService {
       if (!post) {
         throw new HttpException({ message: "postId is not exist", field: "postId" }, HttpStatus.BAD_REQUEST);
       }
+      return true
     } catch (error) {
       errorsMessages.push({ message: "postId is not exist", field: "postId" });
     }
