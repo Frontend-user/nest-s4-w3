@@ -88,7 +88,7 @@ export class PostsQueryRepository {
     } else return [];
   }
 
-  async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id: string | Types.ObjectId): Promise<any> {
+  async getPostsByBlogId(postsQueries: PostsQueryTransformTypes, id: string | Types.ObjectId, accessToken?:string): Promise<any> {
     try {
       await this.postModel.find({ blogId: id }).lean();
     } catch (e) {
@@ -101,7 +101,11 @@ export class PostsQueryRepository {
     const posts = await query.sort(postsQueries.sortParams).skip(postsQueries.skip).limit(postsQueries.limit).lean();
     if (posts.length > 0) {
       const allPosts = await totalCount.countDocuments();
-
+      const fixArrayIds: any[] = [];
+      for (let i = 0; i < posts.length; i++) {
+        const post: any = await this.getPostById(String(posts[i]._id), accessToken);
+        fixArrayIds.push(post);
+      }
       return { totalCount: allPosts, posts: posts };
     } else return [];
   }

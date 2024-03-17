@@ -19,7 +19,7 @@ import {
 import { PostsService } from "./application/posts.service";
 import { PostsQueryRepository } from "./repositories/posts.query-repository";
 import { PostDocumentType } from "./domain/posts-schema";
-import { LikeStatus, PostInputCreateModel, PostViewModel } from "./types/post.types";
+import { LikeStatus, LikeStatusClass, PostInputCreateModel, PostViewModel } from "./types/post.types";
 import { PostsMongoDataMapper } from "./domain/posts.mongo.dm";
 import { BlogsQueryRepository } from "../blogs/repositories/blogs.query-repository";
 import { PostsQueryTransformPipe, PostsQueryTransformTypes } from "./pipes/posts-query-transform-pipe";
@@ -96,14 +96,13 @@ export class PostsController {
       throw new HttpException("Falied updatePost", HttpStatus.NOT_FOUND);
     }
   }
-
   @UseGuards(BearerAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put("/:postId/like-status")
-  async updatePostLikeStatus(@Body("likeStatus") likeStatus: LikeStatus, @Param("postId") postId: string, @Req() req: any) {
+  async updatePostLikeStatus(@Body() body: LikeStatusClass, @Param("postId") postId: string, @Req() req: any) {
     const userId = req.headers.userId;
     try {
-      const response1: any = await this.postsService.updatePostLikeStatus(postId, likeStatus, userId);
+      const response1: any = await this.postsService.updatePostLikeStatus(postId, body.likeStatus, userId);
       console.log(response1, "r1");
       const response: any = await this.postsQueryRepository.getPostById(postId);
       if (!response) {

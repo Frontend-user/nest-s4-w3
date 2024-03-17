@@ -8,7 +8,7 @@ import {
   Param,
   Post,
   Put,
-  Query, UseGuards,
+  Query, Req, UseGuards,
 } from "@nestjs/common";
 import { BlogsService } from "./application/blogs.service";
 import { BlogInputCreateModel, BlogViewModel, WithId } from "./types/blogs.types";
@@ -23,7 +23,7 @@ import { BlogsQueryTransformPipe, BlogsQueryTransformTypes } from "./pipes/blogs
 import { PostsQueryTransformPipe, PostsQueryTransformTypes } from "../posts/pipes/posts-query-transform-pipe";
 import { CommonResponseFabric } from "../_common/common-response-fabric";
 import { BasicAuthGuard } from "../auth/guards/basic-auth.guart";
-import { BearerAuthGuard } from "../auth/guards/bearer-auth.guard";
+import {Request} from "express";
 
 @Controller("/blogs")
 export class BlogsController {
@@ -57,11 +57,11 @@ export class BlogsController {
   @Get("/:id/posts")
   async getPostByBlogId(
     @Param("id") id: string,
-    @Query(PostsQueryTransformPipe) postsQueries: PostsQueryTransformTypes) {
+    @Query(PostsQueryTransformPipe) postsQueries: PostsQueryTransformTypes,@Req() req:Request) {
     if (!id) {
       throw new HttpException("Failed getPostByBlogId", HttpStatus.NOT_FOUND);
     }
-    const result = await this.postsQueryRepository.getPostsByBlogId(postsQueries, id);
+    const result = await this.postsQueryRepository.getPostsByBlogId(postsQueries, id,req.headers.authorization);
 
     const blog = await this.blogsQueryRepository.getBlogById(id);
     if (!blog) {

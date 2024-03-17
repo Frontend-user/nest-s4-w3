@@ -314,16 +314,6 @@ window.onload = function() {
         "post": {
           "operationId": "PostsController_createPost",
           "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PostInputCreateModel"
-                }
-              }
-            }
-          },
           "responses": {
             "201": {
               "description": ""
@@ -401,6 +391,16 @@ window.onload = function() {
               }
             }
           ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeStatusClass"
+                }
+              }
+            }
+          },
           "responses": {
             "204": {
               "description": ""
@@ -449,6 +449,10 @@ window.onload = function() {
           "properties": {}
         },
         "PostInputCreateModel": {
+          "type": "object",
+          "properties": {}
+        },
+        "LikeStatusClass": {
           "type": "object",
           "properties": {}
         }

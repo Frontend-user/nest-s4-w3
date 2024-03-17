@@ -62,9 +62,11 @@ export class TestManager {
     return JSON.parse(getOneBlog.text);
   }
 
-  async getPostsByBlogId(blogId: string) {
+  async getPostsByBlogId(blogId: string,accessToken?:string) {
     console.log(blogId, "blogid");
-    const response = await request(this.app.getHttpServer()).get(`/blogs/${blogId}/posts`);
+    const response = await request(this.app.getHttpServer())
+      .get(`/blogs/${blogId}/posts`)
+      .set("authorization", "Bearer " + `${accessToken}`)
     expect(response.text).toEqual("fsdfdssdf");
     expect(JSON.parse(response.text)).toEqual("fsdfdssdf");
   }

@@ -271,7 +271,7 @@ describe("Blogs", () => {
       expect(JSON.parse(postData.text)).toEqual('some')
     });
     it('Get post by id', async ()=>{
-      const postResp = await testManager.getPosts(accessToken)
+      const postResp = await testManager.getPostsByBlogId(blogId_One,accessToken)
       expect(postResp).toEqual('post some')
     })
 
