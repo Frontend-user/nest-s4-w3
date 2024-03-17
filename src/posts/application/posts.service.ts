@@ -70,7 +70,45 @@ export class PostsService {
     return await this.postsQueryRepository.getPostById(id);
   }
 
-  async updatePost(id: string, post: PostInputCreateModel): Promise<boolean> {
+  async updatePost(id: string, post: any): Promise<boolean> {
+   const errorsMessages: any[] = [];
+    const blogExistErrors: any = [];
+    try {
+      const post = await this.postsQueryRepository.getPostById(id);
+      if (!post) {
+        throw new HttpException({ message: "postId is not exist", field: "postId" }, HttpStatus.BAD_REQUEST);
+      }
+    } catch (error) {
+      errorsMessages.push({ message: "postId is not exist", field: "postId" });
+    }
+    const options = {
+      skipMissingProperties: true, // Пропустить отсутствующие свойства
+    };
+
+    const bodyInstance = Object.assign(new PostInputCreateModel(), post);
+    // Выполнить валидацию
+    const errors: ValidationError[] = await validate(bodyInstance, options);
+    const allErrors = [...blogExistErrors, ...errors];
+
+    errors.forEach((e) => {
+      if (e.constraints) {
+        const s: any = Object.keys(e.constraints);
+        s.forEach((key) => {
+          if (e.constraints) {
+            errorsMessages.push({
+              field: e.property,
+              message: e.constraints[key],
+            });
+          }
+        });
+      }
+    });
+    errorsMessages.push()
+
+    if (errors.length > 0) {
+      throw new BadRequestException({errorsMessages})
+    }
+
     return await this.postsRepository.updatePost(id, post);
   }
 

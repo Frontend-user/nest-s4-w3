@@ -70,13 +70,13 @@ export class PostsController {
   @HttpCode(201)
   @Post()
   async createPost(@Body() body: any) {
-    await this.postsService.createPost(body);
+   return  await this.postsService.createPost(body);
   }
 
   @UseGuards(BasicAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put("/:id")
-  async updatePost(@Body() body: PostInputCreateModel, @Param("id") id: string) {
+  async updatePost(@Body() body: any, @Param("id") id: string) {
     try {
       const response: boolean = await this.postsService.updatePost(id, body);
       if (!response) {
